@@ -1,0 +1,11 @@
+# Game Setup
+WIDTH = 1000
+HEIGHT = 1000
+FPS = 60
+
+# Player setting
+PLAYER_START_X = 500
+PLAYER_START_Y = 500
+
+PLAYER_SPEED = 3
+PLAYER_SIZE = 3

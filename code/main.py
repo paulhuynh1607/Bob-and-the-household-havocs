@@ -28,6 +28,11 @@ class Player(pygame.sprite.Sprite):
         self.velocity_x = 0
         self.velocity_y = 0
         keys = pygame.key.get_pressed()
+        if keys[pygame.K_LSHIFT]:
+            self.speed = PLAYER_SPEED * 2
+        else:
+            self.speed = PLAYER_SPEED
+        if keys[pygame.K_w]:
         if keys[pygame.K_w]:
             self.current_image = PLAYER_DOWN
             self.velocity_y = -self.speed

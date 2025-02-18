@@ -18,3 +18,6 @@ PLAYER_DOWN = "../assets/Entities/Bob/BobBack.png"
 # Background images
 FLOOR = "../assets/background/LivingRoomFloorWithCarpet.png"
 WALL = "../assets/background/WallLivingRoom.png"
+
+#Object images
+SOFA_GREEN = "assets/Entities/sofaGreen.png"

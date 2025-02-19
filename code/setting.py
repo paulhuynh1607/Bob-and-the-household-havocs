@@ -25,3 +25,10 @@ COUCH_X = 150
 COUCH_Y = 200
 COUCH_HITBOX = Rect(COUCH_X, COUCH_Y, 138, 266)
 COLLIDE_LIST = [COUCH_HITBOX, WALL_HITBOX]
+# I added this part for the invisible rect (it's not invisible as of feb 18 11:01) these are the properties of the rect
+ENTER_KITCHEN_X = 798
+ENTER_KITCHEN_Y = 0
+ENTER_KITCHEN_HITBOX = Rect(ENTER_KITCHEN_X, ENTER_KITCHEN_Y, 2, HEIGHT)
+ENTER_KITCHEN_HEIGHT = 800
+ENTER_KITCHEN_WIDTH = 2
+

@@ -1,3 +1,4 @@
+from pygame.locals import *
 # Game Setup
 WIDTH = 800
 HEIGHT = 600
@@ -8,16 +9,19 @@ PLAYER_START_X = 300
 PLAYER_START_Y = 300
 
 PLAYER_SPEED = 3
-PLAYER_SIZE = 3
+PLAYER_SIZE = 1
 
 PLAYER_FRONT = "../assets/Entities/Bob/BobFront.png"
 PLAYER_LEFT = "../assets/Entities/Bob/BobLeft.png"
 PLAYER_RIGHT = "../assets/Entities/Bob/BobRight.png"
 PLAYER_DOWN = "../assets/Entities/Bob/BobBack.png"
 
-# Background images
+# Living Room Scene
 FLOOR = "../assets/background/LivingRoomFloorWithCarpet.png"
-WALL = "../assets/background/WallLivingRoom.png"
-
-#Object images
-SOFA_GREEN = "assets/Entities/sofaGreen.png"
+WALL = "../assets/background/WallLivingRoomGreen.png"
+WALL_HITBOX = Rect(0, 0, WIDTH, 100)
+COUCH = "../assets/Entities/furniture/sofaGreen.png"
+COUCH_X = 150
+COUCH_Y = 200
+COUCH_HITBOX = Rect(COUCH_X, COUCH_Y, 138, 266)
+COLLIDE_LIST = [COUCH_HITBOX, WALL_HITBOX]

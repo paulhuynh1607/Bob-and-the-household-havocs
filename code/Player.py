@@ -15,8 +15,10 @@ class Player(pygame.sprite.Sprite):
         self.speed = PLAYER_SPEED
         self.velocity_x = 0
         self.velocity_y = 0
+        self.scene_num = 0
+        self.collide_list = COLLIDE_LIST_LIVING_ROOM
 
-    def user_input(self, collide_list):
+    def user_input(self):
         self.velocity_x = 0
         self.velocity_y = 0
 
@@ -38,6 +40,16 @@ class Player(pygame.sprite.Sprite):
         # Create a temporary hitbox for the next position
         temp_hitbox = self.hitbox.move(self.velocity_x, self.velocity_y)
 
+        if temp_hitbox.colliderect(KITCHEN_HITBOX) and self.scene_num == 0:
+            self.scene_num = 1
+            self.pos = pygame.math.Vector2(20, self.pos.y)
+            self.collide_list = COLLIDE_LIST_KITCHEN
+
+        if temp_hitbox.colliderect(LIVING_ROOM_HITBOX) and self.scene_num == 1:
+            self.scene_num = 0
+            self.pos = pygame.math.Vector2(700, self.pos.y)
+            self.collide_list = COLLIDE_LIST_LIVING_ROOM
+
         # Check for collisions with the collidable objects
         for cl in collide_list:
             if temp_hitbox.colliderect(cl):
@@ -49,7 +61,9 @@ class Player(pygame.sprite.Sprite):
         self.hitbox.topleft = (self.pos[0] + 45, self.pos[1] + 80)
         self.hitbox_combat = (self.pos[0] + 45, self.pos[1] + 15, 50, 95)
 
-    def update(self, collide_list):
+    def update(self, scene_num):
         self.image = pygame.transform.rotozoom(pygame.image.load(self.current_image).convert_alpha(), 0, PLAYER_SIZE)
-        self.user_input(collide_list)
-        self.move(collide_list)
+        self.user_input()
+        self.move(self.collide_list)
+        return self.scene_num
+

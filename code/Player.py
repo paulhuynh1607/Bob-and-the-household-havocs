@@ -1,69 +1,118 @@
-import pygame
+import pygame, sys
 from sys import exit
-import math
-from pygame.locals import *
 from setting import *
+from Player import Player
+from scenes import  Scenes
+from button import Button
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.current_image = PLAYER_FRONT
-        self.pos = pygame.math.Vector2(PLAYER_START_X, PLAYER_START_Y)
-        self.image = pygame.transform.rotozoom(pygame.image.load(self.current_image).convert_alpha(), 0, PLAYER_SIZE)
-        self.hitbox = pygame.Rect(self.pos[0] + 45, self.pos[1] + 80, 50, 30)
-        self.hitbox_combat = (self.pos[0] + 45, self.pos[1] + 15, 50, 95)
-        self.speed = PLAYER_SPEED
-        self.velocity_x = 0
-        self.velocity_y = 0
-        self.scene_num = 0
-        self.collide_list = COLLIDE_LIST_LIVING_ROOM
+pygame.init()
 
-    def user_input(self):
-        self.velocity_x = 0
-        self.velocity_y = 0
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Bob and The House Hold Havoc")
+clock = pygame.time.Clock()
+player = Player()
+scene = Scenes(screen)
+scene_num = 0
 
+
+BG = pygame.image.load("../assets/GUI/Background.png")
+
+
+def get_font(size):  # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("../assets/GUI/font.ttf", size)
+
+
+def play():
+    while True:
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-            self.current_image = PLAYER_DOWN
-            self.velocity_y = -self.speed
-        elif keys[pygame.K_s]:
-            self.current_image = PLAYER_FRONT
-            self.velocity_y = self.speed
-        elif keys[pygame.K_a]:
-            self.current_image = PLAYER_LEFT
-            self.velocity_x = -self.speed
-        elif keys[pygame.K_d]:
-            self.current_image = PLAYER_RIGHT
-            self.velocity_x = self.speed
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
 
-    def move(self, collide_list):
-        # Create a temporary hitbox for the next position
-        temp_hitbox = self.hitbox.move(self.velocity_x, self.velocity_y)
+        scene.change_scene(player.update(scene_num))
+        screen.blit(player.image, player.pos)
+        # pygame.draw.rect(screen, "yellow", DOWN_WALL, width=2)
+        # pygame.draw.rect(screen, "yellow", KITCHEN_HITBOX, width=2)
+        # pygame.draw.rect(screen, "yellow", player.hitbox, width=2)
+        # pygame.draw.rect(screen, "red", player.hitbox_combat, width=2)
+        # pygame.draw.rect(screen, "red", COUCH_HITBOX, width=2)
+        # pygame.draw.rect(screen, "red", WALL_HITBOX, width=2)
 
-        if temp_hitbox.colliderect(KITCHEN_HITBOX) and self.scene_num == 0:
-            self.scene_num = 1
-            self.pos = pygame.math.Vector2(20, self.pos.y)
-            self.collide_list = COLLIDE_LIST_KITCHEN
+        pygame.display.update()
+        clock.tick(FPS)
 
-        if temp_hitbox.colliderect(LIVING_ROOM_HITBOX) and self.scene_num == 1:
-            self.scene_num = 0
-            self.pos = pygame.math.Vector2(700, self.pos.y)
-            self.collide_list = COLLIDE_LIST_LIVING_ROOM
 
-        # Check for collisions with the collidable objects
-        for cl in collide_list:
-            if temp_hitbox.colliderect(cl):
-                # Collision detected, do not move
-                return
+def options():
+    while True:
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-        # No collision, update position and hitbox
-        self.pos += pygame.math.Vector2(self.velocity_x, self.velocity_y)
-        self.hitbox.topleft = (self.pos[0] + 45, self.pos[1] + 80)
-        self.hitbox_combat = (self.pos[0] + 45, self.pos[1] + 15, 50, 95)
+        screen.fill("white")
 
-    def update(self, scene_num):
-        self.image = pygame.transform.rotozoom(pygame.image.load(self.current_image).convert_alpha(), 0, PLAYER_SIZE)
-        self.user_input()
-        self.move(self.collide_list)
-        return self.scene_num
+        OPTIONS_TEXT = get_font(15).render("This is the OPTIONS screen.", True, "Black")
+        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(400, 260))
+        screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
+
+        OPTIONS_BACK = Button(image=None, pos=(400, 460),
+                              text_input="BACK", font=get_font(15), base_color="Black", hovering_color="Green")
+
+        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_BACK.update(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
+                    main_menu()
+
+        pygame.display.update()
+
+
+
+
+def main_menu():
+    while True:
+        screen.blit(BG, (0, 0))
+
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        MENU_TEXT = get_font(50).render("Bob and the", True, "#90d5ff")
+        MENU_RECT = MENU_TEXT.get_rect(center=(400, 100))
+        MENU_TEXT1 = get_font(50).render("Household Havoc", True, "#90d5ff")
+        MENU_RECT1 = MENU_TEXT.get_rect(center=(315, 150))
+
+        PLAY_BUTTON = Button(image=pygame.image.load("../assets/GUI/Play Rect.png").convert_alpha(), pos=(400, 250),
+                             text_input="PLAY", font=get_font(30), base_color="#d7fcd4", hovering_color="White")
+        OPTIONS_BUTTON = Button(image=pygame.image.load("../assets/GUI/Options Rect.png").convert_alpha(), pos=(400, 375),
+                                text_input="OPTIONS", font=get_font(30), base_color="#d7fcd4", hovering_color="White")
+        QUIT_BUTTON = Button(image=pygame.image.load("../assets/GUI/Quit Rect.png").convert_alpha(), pos=(400, 500),
+                             text_input="QUIT", font=get_font(30), base_color="#d7fcd4", hovering_color="White")
+
+        screen.blit(MENU_TEXT, MENU_RECT)
+        screen.blit(MENU_TEXT1, MENU_RECT1)
+
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    play()
+                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    options()
+                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    pygame.quit()
+                    sys.exit()
+
+        pygame.display.update()
+
+
+main_menu()
+
 

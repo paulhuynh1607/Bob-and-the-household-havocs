@@ -1,7 +1,7 @@
 import pygame, sys
 from sys import exit
 from setting import *
-from Player import Player, Projectile
+from Player import Player
 from scenes import  Scenes
 from button import Button
 
@@ -11,9 +11,8 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Bob and The House Hold Havoc")
 clock = pygame.time.Clock()
 player = Player()
-projectile = Projectile
 scene = Scenes(screen)
-scene_num = 2
+scene_num = 0
 
 
 BG = pygame.image.load("../assets/GUI/Background.png")
@@ -32,13 +31,7 @@ def play():
                 exit()
 
         scene.change_scene(player.update(scene_num))
-        player.draw_projectiles(screen)
         screen.blit(player.image, player.pos)
-
-        # Draw the health bar
-        player.draw_health_bar(screen)
-
-        # Uncomment the following lines if you want to visualize hitboxes
         # pygame.draw.rect(screen, "yellow", DOWN_WALL, width=2)
         # pygame.draw.rect(screen, "yellow", KITCHEN_HITBOX, width=2)
         # pygame.draw.rect(screen, "yellow", player.hitbox, width=2)
@@ -74,7 +67,6 @@ def options():
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
 
-
         pygame.display.update()
 
 
@@ -86,10 +78,13 @@ def main_menu():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(50).render("Bob and the", True, "#90d5ff")
-        MENU_RECT = MENU_TEXT.get_rect(center=(400, 100))
-        MENU_TEXT1 = get_font(50).render("Household Havoc", True, "#90d5ff")
-        MENU_RECT1 = MENU_TEXT.get_rect(center=(315, 150))
+        MENU_TEXT = get_font(40).render("BOB", True, "#e4feff")
+        MENU_TEXT2 = get_font(40).render("AND THE", True, "#e4feff")
+        MENU_TEXT3= get_font(40).render("HOUSEHOLD HAVOCS", True, "#e4feff")
+
+        MENU_RECT = MENU_TEXT.get_rect(center=(400, 50))
+        MENU_RECT2 = MENU_TEXT.get_rect(center=(320, 100))
+        MENU_RECT3 = MENU_TEXT.get_rect(center=(150, 150))
 
         PLAY_BUTTON = Button(image=pygame.image.load("../assets/GUI/Play Rect.png").convert_alpha(), pos=(400, 250),
                              text_input="PLAY", font=get_font(30), base_color="#d7fcd4", hovering_color="White")
@@ -99,7 +94,9 @@ def main_menu():
                              text_input="QUIT", font=get_font(30), base_color="#d7fcd4", hovering_color="White")
 
         screen.blit(MENU_TEXT, MENU_RECT)
-        screen.blit(MENU_TEXT1, MENU_RECT1)
+        screen.blit(MENU_TEXT2, MENU_RECT2)
+        screen.blit(MENU_TEXT3, MENU_RECT3)
+
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
@@ -122,5 +119,4 @@ def main_menu():
 
 
 main_menu()
-
 

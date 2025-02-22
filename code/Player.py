@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = PLAYER_SPEED
         self.velocity_x = 0
         self.velocity_y = 0
-        self.scene_num = 2
+        self.scene_num = 0
         self.collide_list = COLLIDE_LIST_LIVING_ROOM
 
     def user_input(self):
@@ -50,9 +50,10 @@ class Player(pygame.sprite.Sprite):
             self.scene_num = 0
             self.pos = pygame.math.Vector2(700, self.pos.y)
             self.collide_list = COLLIDE_LIST_LIVING_ROOM
-        
 
-        
+        if self.scene_num == 2:
+            self.pos
+
         # Check for collisions with the collidable objects
         for cl in collide_list:
             if temp_hitbox.colliderect(cl):

@@ -1,3 +1,4 @@
+
 import pygame
 from setting import *
 
@@ -10,10 +11,16 @@ class Scenes:
         background = pygame.transform.scale(pygame.image.load(FLOOR).convert(), (WIDTH, HEIGHT))
         wall = pygame.transform.scale(pygame.image.load(WALL).convert(), (WIDTH, 100))
         couch = pygame.transform.scale(pygame.image.load(COUCH).convert_alpha(), (138, 266))
+        door = pygame.transform.scale(pygame.image.load(DOOR_TO_BASEMENT).convert_alpha(), (29, 252))
+        tv_table = pygame.transform.scale(pygame.image.load(TV_TABLE).convert_alpha(), (85, 155))
+        tv = pygame.transform.scale(pygame.image.load(TV).convert_alpha(), (47, 160))
 
         self.screen.blit(background, (0, 0))
         self.screen.blit(wall, (0, 0))
         self.screen.blit(couch, (COUCH_X, COUCH_Y))
+        self.screen.blit(door, (DOOR_TO_BASEMENT_X, DOOR_TO_BASEMENT_Y))
+        self.screen.blit(tv_table, (TV_TABLE_X, TV_TABLE_Y))
+        self.screen.blit(tv, (TV_X, TV_Y))
 
     def kitchen(self):
         floor = pygame.transform.scale(pygame.image.load(K_FLOOR).convert(), (WIDTH, HEIGHT))
@@ -32,6 +39,11 @@ class Scenes:
         self.screen.blit(dining_table, (DINING_TABLE_X, DINING_TABLE_Y))
         self.screen.blit(normal_fridge, (FRIDGE_X, FRIDGE_Y))
 
+    def basement(self): # I added this one for the basement - Benedict
+        floor = pygame.transform.scale(pygame.image.load(K_FLOOR).convert(), (WIDTH, HEIGHT)) # I used the kitchen floor as placeholder -Benedict
+
+        self.screen.blit(floor, (0, 0))
+
     def change_scene(self, current_scene_num):
         self.current_scene = current_scene_num
         match self.current_scene:
@@ -39,5 +51,5 @@ class Scenes:
                 self.living_room()
             case 1:
                 self.kitchen()
-
-
+            case 2:
+                self.basement() # THis is what I added - Benedict

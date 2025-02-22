@@ -24,10 +24,10 @@ class Player(pygame.sprite.Sprite):
         self.velocity_y = 0
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w] and self.scene_num != 2:
+        if keys[pygame.K_w]:
             self.current_image = PLAYER_DOWN
             self.velocity_y = -self.speed
-        elif keys[pygame.K_s] and self.scene_num != 2:
+        elif keys[pygame.K_s]:
             self.current_image = PLAYER_FRONT
             self.velocity_y = self.speed
         elif keys[pygame.K_a]:
@@ -50,6 +50,13 @@ class Player(pygame.sprite.Sprite):
             self.scene_num = 0
             self.pos = pygame.math.Vector2(700, self.pos.y)
             self.collide_list = COLLIDE_LIST_LIVING_ROOM
+
+        if temp_hitbox.colliderect(DOOR_TO_BASEMENT_HITBOX) and self.scene_num == 0: # This is what I put
+            self.scene_num = 2
+            self.pos = pygame.math.Vector2(700, self.pos.y)
+            self.collide_list = COLLIDE_LIST_BASEMENT
+
+
 
         if self.scene_num == 2:
             self.pos

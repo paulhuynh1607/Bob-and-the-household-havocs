@@ -65,7 +65,7 @@ STOVE = "../assets/Entities/furniture/Stove.png"
 STOVE_X, STOVE_Y = 650, 25
 STOVE_HITBOX = Rect(STOVE_X, STOVE_Y, 155, 369)
 
-NORMAL_FRIDGE = "../assets/Entities/furniture/FridgeNormal.png"
+NORMAL_FRIDGE = "../assets/Entities/furniture/Fridge/FridgeNormal.png" # Changed the file directory because jino made the animation for the fridge
 FRIDGE_X, FRIDGE_Y = 310, 20
 FRIDGE_HITBOX = Rect(FRIDGE_X, FRIDGE_Y, 113, 176)
 

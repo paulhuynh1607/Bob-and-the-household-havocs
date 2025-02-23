@@ -30,6 +30,7 @@ class Scenes:
         dining_chair1 = pygame.transform.scale(pygame.image.load(DINING_CHAIR1).convert_alpha(), (75, 109))
         dining_table = pygame.transform.scale(pygame.image.load(DINING_TABLE).convert_alpha(), (152, 109))
         normal_fridge = pygame.transform.scale(pygame.image.load(NORMAL_FRIDGE).convert_alpha(), (113, 176))
+        stove = pygame.transform.scale(pygame.image.load(STOVE).convert_alpha(), (155, 369))
 
         self.screen.blit(floor, (0, 0))
         self.screen.blit(wall, (0, 0))
@@ -38,6 +39,7 @@ class Scenes:
         self.screen.blit(dining_chair1, (DINING_CHAIR_X1, DINING_CHAIR_Y1))
         self.screen.blit(dining_table, (DINING_TABLE_X, DINING_TABLE_Y))
         self.screen.blit(normal_fridge, (FRIDGE_X, FRIDGE_Y))
+        self.screen.blit(stove, (STOVE_X, STOVE_Y))
 
     def basement(self): # I added this one for the basement - Benedict
         floor = pygame.transform.scale(pygame.image.load(BASEMENT_FLOOR).convert(), (WIDTH, HEIGHT)) # I used the kitchen floor as placeholder -Benedict

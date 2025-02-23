@@ -5,7 +5,9 @@ from Player import Player
 from scenes import  Scenes
 from button import Button
 
+
 pygame.init()
+pygame.mixer.init()
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Bob and The House Hold Havoc")
@@ -13,6 +15,7 @@ clock = pygame.time.Clock()
 player = Player()
 scene = Scenes(screen)
 scene_num = 0
+
 
 
 BG = pygame.image.load("../assets/GUI/Background.png")
@@ -75,6 +78,9 @@ def options():
 def main_menu():
     while True:
         screen.blit(BG, (0, 0))
+        pygame.mixer.music.load("../assets/Sounds/Music/Joyful.mp3")
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 

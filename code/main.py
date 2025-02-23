@@ -24,6 +24,35 @@ BG = pygame.image.load("../assets/GUI/Background.png")
 def get_font(size):  # Returns Press-Start-2P in the desired size
     return pygame.font.Font("../assets/GUI/font.ttf", size)
 
+def losing_scene():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        screen.fill((0, 0, 0))  # Fill the screen with black
+        text = get_font(50).render("Game Over", True, (255, 0, 0))  # Render the "Game Over" text
+        text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))  # Center the text
+
+        restart_text = get_font(30).render("Press R to Restart or Q to Quit", True, (255, 255, 255))
+        restart_rect = restart_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
+
+        # Draw the text
+        screen.blit(text, text_rect)
+        screen.blit(restart_text, restart_rect)
+
+        pygame.display.update()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_r]:
+            player.health = 100
+            player.scene_num = 0
+            main_menu()  # Restart the game by going back to the main menu
+        if keys[pygame.K_q]:
+            pygame.quit()
+            sys.exit()
+
 
 def play():
     while True:
@@ -33,41 +62,41 @@ def play():
                 pygame.quit()
                 exit()
 
-
         scene.change_scene(player.update())
         player.draw_projectiles(screen, washingMachine)
         screen.blit(player.image, player.pos)
 
         if player.scene_num == 3:
-            # Check for collisions between player projectiles and the boss's projectiles
             washingMachine.draw(screen)
             washingMachine.update()
             for boss_projectile in washingMachine.projectiles:
-                if boss_projectile.hitbox.colliderect(player.hitbox_combat) or boss_projectile.hitbox.colliderect(player.hitbox):
-                    # Deal damage to the player
-                    player.health -= 10  # Example: player takes damage
-                    # Remove the projectiles after collision
+                # pygame.draw.rect(screen, "yellow", boss_projectile.hitbox, width=2)
+                if boss_projectile.hitbox.colliderect(player.hitbox_combat):
+                    player.health -= 10  # Player takes damage
                     washingMachine.projectiles.remove(boss_projectile)
-                    break  # Exit the loop after handling the collision
+                    break
+
             player.draw_health_bar(screen)
 
             for bullet in player.bullets:
                 if bullet.hitbox.colliderect(washingMachine.hitbox):
-                    # Deal damage to the player
-                    washingMachine.take_damage(10)  # Example: player takes damage
-                    # Remove the projectiles after collision
+                    washingMachine.take_damage(10)  # Deal damage to the washing machine
                     player.bullets.remove(bullet)
-                    break  # Exit the loop after handling the collision
+                    break
 
-
+        # Check for losing condition
+        if player.health <= 0:
+            losing_scene()  # Call the losing scene
 
         # Uncomment the following lines if you want to visualize hitboxes
         # pygame.draw.rect(screen, "yellow", DOWN_WALL, width=2)
         # pygame.draw.rect(screen, "yellow", KITCHEN_HITBOX, width=2)
         # pygame.draw.rect(screen, "yellow", player.hitbox, width=2)
         # pygame.draw.rect(screen, "red", player.hitbox_combat, width=2)
+
         # pygame.draw.rect(screen, "red", COUCH_HITBOX, width=2)
         # pygame.draw.rect(screen, "red", WALL_HITBOX, width=2)
+
 
         pygame.display.update()
         clock.tick(FPS)
@@ -140,6 +169,8 @@ def main_menu():
                     sys.exit()
 
         pygame.display.update()
+
+
 
 
 main_menu()

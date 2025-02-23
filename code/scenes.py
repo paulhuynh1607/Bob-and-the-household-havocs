@@ -40,9 +40,15 @@ class Scenes:
         self.screen.blit(normal_fridge, (FRIDGE_X, FRIDGE_Y))
 
     def basement(self): # I added this one for the basement - Benedict
-        floor = pygame.transform.scale(pygame.image.load(K_FLOOR).convert(), (WIDTH, HEIGHT)) # I used the kitchen floor as placeholder -Benedict
+        floor = pygame.transform.scale(pygame.image.load(BASEMENT_FLOOR).convert(), (WIDTH, HEIGHT)) # I used the kitchen floor as placeholder -Benedict
+        stairs = pygame.transform.scale(pygame.image.load(STAIRS).convert(), (208, 368))
+        railings = pygame.transform.scale(pygame.image.load(RAILINGS).convert(), (48, 368))
+        shelf = pygame.transform.scale(pygame.image.load(SHELF).convert_alpha(), (128, 224))
 
         self.screen.blit(floor, (0, 0))
+        self.screen.blit(stairs, (STAIRS_X, STAIRS_Y))
+        self.screen.blit(railings, (RAILINGS_X, RAILINGS_Y))
+        self.screen.blit(shelf, (SHELF_X, SHELF_Y))
 
     def change_scene(self, current_scene_num):
         self.current_scene = current_scene_num

@@ -1,7 +1,6 @@
 import pygame
 from setting import *
 
-
 class Projectile(object):
     def __init__(self, x, y, radius, color):
         self.x = x
@@ -19,7 +18,7 @@ class Projectile(object):
         self.hitbox.topleft = (self.x - self.radius, self.y - self.radius)  # Update hitbox position
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, scene):
         super().__init__()
         self.images = {
             'back': [PLAYER_DOWN, PLAYER_DOWN1, PLAYER_DOWN2, PLAYER_DOWN3, PLAYER_DOWN4] ,  # Add your images for moving down
@@ -27,6 +26,7 @@ class Player(pygame.sprite.Sprite):
             'right': [PLAYER_RIGHT, PLAYER_RIGHT1, PLAYER_RIGHT2, PLAYER_RIGHT3, PLAYER_RIGHT4], # Add your images for moving right
             'front': [PLAYER_FRONT, PLAYER_FRONT1, PLAYER_FRONT2, PLAYER_FRONT3, PLAYER_FRONT4] # Add your images for moving up
         }
+        self.scenes = scene
         self.current_image = self.images['front'][0]  # Start with the first image for moving down
         self.image_index = 0  # Index for the current image
         self.health = 100
@@ -57,7 +57,23 @@ class Player(pygame.sprite.Sprite):
         self.velocity_y = 0
         keys = pygame.key.get_pressed()
 
-        if self.scene_num != 3:
+        if self.scene_num == 2 and not self.scenes.isChemical:
+            if keys[pygame.K_a]:
+                self.velocity_x = -self.speed
+                self.player_state = "back"
+                self.is_moving = True
+            elif keys[pygame.K_d]:
+                self.velocity_x = self.speed
+                self.player_state = "back"
+                self.is_moving = True
+            if keys[pygame.K_e]:
+                current_time = pygame.time.get_ticks()
+                if current_time - self.last_shot_time >= self.shoot_delay:
+                    new_projectile = Projectile(self.pos.x + 75, self.pos.y, self.water_radius, (0, 0, 255))
+                    self.bullets.append(new_projectile)
+                    self.last_shot_time = current_time
+
+        else:
             if keys[pygame.K_w]:
                 self.velocity_y = -self.speed
                 self.player_state = "back"
@@ -77,25 +93,9 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.is_moving = False  # Not moving
 
-        else:
-            if keys[pygame.K_a]:
-                self.velocity_x = -self.speed
-                self.player_state = "back"
-                self.is_moving = True
-            elif keys[pygame.K_d]:
-                self.velocity_x = self.speed
-                self.player_state = "back"
-                self.is_moving = True
-            if keys[pygame.K_e]:
-                current_time = pygame.time.get_ticks()
-                if current_time - self.last_shot_time >= self.shoot_delay:
-                    new_projectile = Projectile(self.pos.x + 75, self.pos.y, self.water_radius, (0, 0, 255))
-                    self.bullets.append(new_projectile)
-                    self.last_shot_time = current_time
-
 
     def draw_health_bar(self, screen):
-        if self.scene_num == 3:
+        if self.scene_num == 2 and not self.scenes.isChemical:
             # Draw the health bar background
             pygame.draw.rect(screen, (255, 0, 0), (self.pos.x + 20, self.pos.y - 20, 100, 10))  # Red background
             # Draw the current health
@@ -109,24 +109,29 @@ class Player(pygame.sprite.Sprite):
         temp_hitbox = self.hitbox.move(self.velocity_x, self.velocity_y)
 
         if temp_hitbox.colliderect(DOOR_TO_BASEMENT_HITBOX) and self.scene_num == 0: # This is what I put
-            print(self.scene_num)
             self.scene_num = 2
             self.pos = pygame.math.Vector2(700, self.pos.y)
             self.collide_list = COLLIDE_LIST_BASEMENT
 
-        if temp_hitbox.colliderect(KITCHEN_HITBOX) and self.scene_num == 0:
+        elif temp_hitbox.colliderect(BASEMENT_TO_LIVING_ROOM_HITBOX) and self.scene_num == 2:
+            self.scene_num = 0
+            self.pos = pygame.math.Vector2(20, self.pos.y)
+            self.collide_list = COLLIDE_LIST_LIVING_ROOM
+
+        elif temp_hitbox.colliderect(KITCHEN_HITBOX) and self.scene_num == 0:
             self.scene_num = 1
             self.pos = pygame.math.Vector2(20, self.pos.y)
             self.collide_list = COLLIDE_LIST_KITCHEN
 
-        if temp_hitbox.colliderect(LIVING_ROOM_HITBOX) and self.scene_num == 1:
+        elif temp_hitbox.colliderect(LIVING_ROOM_HITBOX) and self.scene_num == 1:
             self.scene_num = 0
             self.pos = pygame.math.Vector2(700, self.pos.y)
             self.collide_list = COLLIDE_LIST_LIVING_ROOM
 
+        elif temp_hitbox.colliderect(SINK_HITBOX) and self.scene_num == 1:
+            self.scenes.isChemical = False
 
-
-        if self.scene_num == 3:
+        if self.scene_num == 2 and not self.scenes.isChemical:
             self.pos.y = 400
             self.current_image = PLAYER_DOWN
             self.collide_list = COLLIDE_LIST_COMBAT

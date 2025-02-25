@@ -110,17 +110,18 @@ class Player(pygame.sprite.Sprite):
 
         if temp_hitbox.colliderect(DOOR_TO_BASEMENT_HITBOX) and self.scene_num == 0: # This is what I put
             self.scene_num = 2
-            self.pos = pygame.math.Vector2(700, self.pos.y)
+            self.pos.x = 650
             self.collide_list = COLLIDE_LIST_BASEMENT
 
         elif temp_hitbox.colliderect(BASEMENT_TO_LIVING_ROOM_HITBOX) and self.scene_num == 2:
-            self.scene_num = 0
             self.pos = pygame.math.Vector2(20, self.pos.y)
+            self.scene_num = 0
             self.collide_list = COLLIDE_LIST_LIVING_ROOM
+            return
 
         elif temp_hitbox.colliderect(KITCHEN_HITBOX) and self.scene_num == 0:
             self.scene_num = 1
-            self.pos = pygame.math.Vector2(20, self.pos.y)
+            self.pos.x = 20
             self.collide_list = COLLIDE_LIST_KITCHEN
 
         elif temp_hitbox.colliderect(LIVING_ROOM_HITBOX) and self.scene_num == 1:

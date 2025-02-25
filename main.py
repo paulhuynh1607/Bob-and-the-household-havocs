@@ -1,9 +1,8 @@
 import asyncio
 import pygame
-import random
 import sys
 from setting import *
-from Player import Player, Projectile
+from Player import Player
 from scenes import Scenes
 from button import Button
 from WashingMachine import WashingMachine
@@ -28,11 +27,13 @@ MAIN_MENU = 0
 PLAYING = 1
 WINNING = 2
 LOSING = 3
+OPTIONS = 4
 current_state = MAIN_MENU
 
 
 def get_font(size):  # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/GUI/font.ttf", size)
+
 
 def draw_winning_scene():
     screen.fill((0, 0, 0))  # Fill the screen with black
@@ -42,9 +43,27 @@ def draw_winning_scene():
     restart_text = get_font(15).render("Press R to Restart or Q to Quit", True, (255, 255, 255))
     restart_rect = restart_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 50))
 
+    member1_text = get_font(20).render("Programming: Paulhuynh1607", True, (255, 255, 255))
+    member1_rect = member1_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 100))
+
+    member2_text = get_font(20).render("Music/Assistant art and programing:", True, (255, 255, 255))
+    member2_rect = member2_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 130))
+    member2_text1 = get_font(20).render("BennyMcleany", True, (255, 255, 255))
+    member2_rect1 = member2_text.get_rect(center=(WIDTH // 2+225, HEIGHT // 2 + 160))
+
+    member3_text = get_font(20).render("Art & Graphics: XYRzppI", True, (255, 255, 255))
+    member3_rect = member3_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 + 190))
+
+    # Draw the credits
+    screen.blit(member1_text, member1_rect)
+    screen.blit(member2_text, member2_rect)
+    screen.blit(member2_text1, member2_rect1)
+    screen.blit(member3_text, member3_rect)
+
     # Draw the text
     screen.blit(text, text_rect)
     screen.blit(restart_text, restart_rect)
+
 
 def draw_losing_scene():
     screen.fill((0, 0, 0))  # Fill the screen with black
@@ -57,6 +76,7 @@ def draw_losing_scene():
     # Draw the text
     screen.blit(text, text_rect)
     screen.blit(restart_text, restart_rect)
+
 
 def draw_main_menu():
     screen.blit(BG, (0, 0))
@@ -83,8 +103,56 @@ def draw_main_menu():
 
     return PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON
 
+
+class Slider:
+    def __init__(self, x, y, width, height, min_value=0, max_value=1, initial_value=0.5):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.min_value = min_value
+        self.max_value = max_value
+        self.value = initial_value
+        self.handle_rect = pygame.Rect(x + (width * initial_value) - (height // 2), y, height, height)
+
+    def draw(self, screen):
+        # Draw the slider background
+        pygame.draw.rect(screen, (200, 200, 200), self.rect)
+        # Draw the slider handle
+        pygame.draw.rect(screen, (100, 100, 100), self.handle_rect)
+
+    def update(self, mouse_pos, mouse_pressed):
+        if self.rect.collidepoint(mouse_pos) and mouse_pressed[0]:  # If mouse is pressed
+            # Update the handle position
+            self.handle_rect.x = max(self.rect.x, min(mouse_pos[0] - self.handle_rect.width // 2, self.rect.x + self.rect.width - self.handle_rect.width))
+            # Calculate the new volume value
+            self.value = (self.handle_rect.x - self.rect.x) / self.rect.width
+            pygame.mixer.music.set_volume(self.value)  # Set the volume
+
+
+def draw_options_menu():
+    screen.fill((0, 0, 0))  # Fill the screen with black
+    text = get_font(50).render("Options", True, (255, 255, 255))
+    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 50))
+    screen.blit(text, text_rect)
+
+    text1 = get_font(30).render("Music", True, (255, 255, 255))
+    text_rect1 = text.get_rect(center=(WIDTH // 2 + 90, HEIGHT // 2 + 80))
+    screen.blit(text1, text_rect1)
+
+    volume_slider.draw(screen)  # Draw the volume slider
+
+    back_text = get_font(15).render("Press B to go back", True, (255, 255, 255))
+    back_rect = back_text.get_rect(center=(WIDTH // 2, HEIGHT // 2 ))
+    screen.blit(back_text, back_rect)
+
+
+# Initialize the slider
+volume_slider = Slider(200, 400, 400, 20)
+
 # Main game loop
 async def main():
+    pygame.mixer.init()
+    game_snd = pygame.mixer.Sound("assets/music/Joyful.ogg")
+    boss_fight_snd = pygame.mixer.Sound("assets/music/Pagaway2.ogg")
+    end_theme_snd = pygame.mixer.Sound("assets/music/EndTheme.ogg")
     while True:
         global current_state
         for event in pygame.event.get():
@@ -92,28 +160,41 @@ async def main():
                 pygame.quit()
                 sys.exit()
 
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_pressed = pygame.mouse.get_pressed()
+
         if current_state == MAIN_MENU:
+            end_theme_snd.stop()
             PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON = draw_main_menu()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                if PLAY_BUTTON.checkForInput(mouse_pos):
                     current_state = PLAYING
-                if OPTIONS_BUTTON.checkForInput(pygame.mouse.get_pos()):
-                    # Handle options if needed
-                    pass
-                if QUIT_BUTTON.checkForInput(pygame.mouse.get_pos()):
+                if OPTIONS_BUTTON.checkForInput(mouse_pos):
+                    current_state = OPTIONS  # Switch to options state
+                if QUIT_BUTTON.checkForInput(mouse_pos):
                     pygame.quit()
                     sys.exit()
+
+        elif current_state == OPTIONS:
+            draw_options_menu()
+            volume_slider.update(mouse_pos, mouse_pressed)  # Update the slider
+
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_b]:  # Go back to the main menu
+                current_state = MAIN_MENU
 
         elif current_state == PLAYING:
             scene.change_scene(player.update())
             player.draw_projectiles(screen, washingMachine)
             screen.blit(player.image, player.pos)
-
-            # pygame.draw.rect(screen, "yellow", KITCHEN_HITBOX, width=2)
-            # pygame.draw.rect(screen, "red", BASEMENT_TO_LIVING_ROOM_HITBOX, width=2)
+            game_snd.play()
+            game_snd.set_volume(volume_slider.value)
 
             if player.scene_num == 2 and not scene.isChemical:
+                game_snd.stop()
+                boss_fight_snd.play()
+                boss_fight_snd.set_volume(volume_slider.value)
                 washingMachine.draw(screen)
                 washingMachine.update()
                 player.draw_health_bar(screen)
@@ -141,6 +222,9 @@ async def main():
                 current_state = LOSING  # Switch to losing state
 
         elif current_state == WINNING:
+            boss_fight_snd.stop()
+            end_theme_snd.play()
+            end_theme_snd.set_volume(volume_slider.value)
             draw_winning_scene()
             keys = pygame.key.get_pressed()
             if keys[pygame.K_r]:
@@ -169,6 +253,3 @@ async def main():
         await asyncio.sleep(0)
 
 asyncio.run(main())
-
-
-

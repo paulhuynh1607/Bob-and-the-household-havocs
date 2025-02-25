@@ -96,7 +96,7 @@ STOVE = "assets/Entities/furniture/Stove.png"
 STOVE_X, STOVE_Y = 650, 25
 STOVE_HITBOX = Rect(STOVE_X, STOVE_Y, 155, 369)
 
-NORMAL_FRIDGE = "assets/Entities/furniture/FridgeNormal.png"
+NORMAL_FRIDGE = "assets/Entities/furniture/Fridge/FridgeNormal.png"
 FRIDGE_X, FRIDGE_Y = 310, 20
 FRIDGE_HITBOX = Rect(FRIDGE_X, FRIDGE_Y, 113, 176)
 
@@ -135,5 +135,5 @@ BASEMENT_TO_LIVING_ROOM_HITBOX = Rect(WIDTH-15, DOOR_TO_BASEMENT_Y, 29, 252)
 # Combat scene
 
 COMBAT_FLOOR = "assets/background/LivingRoomFloorNoCarpet.png"
-EVIL_WASHING_MACHINE = "assets/Entities/furniture/WashingMachine/WashingMachineFront.png"
+EVIL_WASHING_MACHINE = "assets/Entities/WashingMachine/WashingMachineFront.png"
 COLLIDE_LIST_COMBAT = [SIDE_LEFT_WALL, SIDE_RIGHT_WALL]

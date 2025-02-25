@@ -117,7 +117,7 @@ RAILINGS_X = 544
 RAILINGS_Y = 0
 RAILINGS_HITBOX = Rect(RAILINGS_X, RAILINGS_Y, 48, 368)
 
-WASHING_MACHINE = "assets/Entities/WashingMachine/WashingMachine.png"
+WASHING_MACHINE = "assets/Entities/furniture/WashingMachine/WashingMachine.png"
 WASHING_MACHINE_X = 60
 WASHING_MACHINE_Y = 300
 WASHING_MACHINE_HITBOX = Rect(WASHING_MACHINE_X, WASHING_MACHINE_Y, 160, 240)
@@ -135,5 +135,5 @@ BASEMENT_TO_LIVING_ROOM_HITBOX = Rect(WIDTH-15, DOOR_TO_BASEMENT_Y, 29, 252)
 # Combat scene
 
 COMBAT_FLOOR = "assets/background/LivingRoomFloorNoCarpet.png"
-EVIL_WASHING_MACHINE = "assets/Entities/WashingMachine/WashingMachineFront.png"
+EVIL_WASHING_MACHINE = "assets/Entities/furniture/WashingMachine/WashingMachineFront.png"
 COLLIDE_LIST_COMBAT = [SIDE_LEFT_WALL, SIDE_RIGHT_WALL]

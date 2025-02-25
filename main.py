@@ -150,9 +150,9 @@ volume_slider = Slider(200, 400, 400, 20)
 # Main game loop
 async def main():
     pygame.mixer.init()
-    game_snd = pygame.mixer.Sound("assets/music/Joyful.ogg")
-    boss_fight_snd = pygame.mixer.Sound("assets/music/Pagaway2.ogg")
-    end_theme_snd = pygame.mixer.Sound("assets/music/EndTheme.ogg")
+    game_snd = pygame.mixer.Sound("assets/Sounds/Music/Joyful.ogg")
+    boss_fight_snd = pygame.mixer.Sound("assets/Sounds/Music/Pagaway2.ogg")
+    end_theme_snd = pygame.mixer.Sound("assets/Sounds/Music/EndTheme.ogg")
     while True:
         global current_state
         for event in pygame.event.get():

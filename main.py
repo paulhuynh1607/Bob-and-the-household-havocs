@@ -189,7 +189,6 @@ async def main():
             player.draw_projectiles(screen, washingMachine)
             screen.blit(player.image, player.pos)
             game_snd.play()
-            game_snd.set_volume(volume_slider.value)
 
             if player.scene_num == 2 and not scene.isChemical:
                 game_snd.stop()
@@ -224,7 +223,6 @@ async def main():
         elif current_state == WINNING:
             boss_fight_snd.stop()
             end_theme_snd.play()
-            end_theme_snd.set_volume(volume_slider.value)
             draw_winning_scene()
             keys = pygame.key.get_pressed()
             if keys[pygame.K_r]:

@@ -110,6 +110,9 @@ async def main():
             player.draw_projectiles(screen, washingMachine)
             screen.blit(player.image, player.pos)
 
+            # pygame.draw.rect(screen, "yellow", KITCHEN_HITBOX, width=2)
+            # pygame.draw.rect(screen, "red", BASEMENT_TO_LIVING_ROOM_HITBOX, width=2)
+
             if player.scene_num == 2 and not scene.isChemical:
                 washingMachine.draw(screen)
                 washingMachine.update()
@@ -121,8 +124,6 @@ async def main():
                         player.health -= 10  # Player takes damage
                         washingMachine.projectiles.remove(boss_bullet)  # Remove the bullet after collision
                         break
-
-
 
                 # Check for collisions between player bullets and the washing machine
                 for bullet in player.bullets:

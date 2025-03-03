@@ -7,6 +7,10 @@ from scenes import Scenes
 from button import Button
 from WashingMachine import WashingMachine
 
+
+# IF you see this on github, then that means the cloning was successful
+
+
 pygame.init()
 
 # Initialize screen and clock
